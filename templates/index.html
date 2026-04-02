@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>웹 서비스</title>
+</head>
+<body>
+    <h1>회원가입</h1>
+    <input type="text" id="reg-username" placeholder="아이디">
+    <input type="password" id="reg-password" placeholder="비밀번호">
+    <button onclick="register()">회원가입</button>
+    <p id="reg-message"></p>
+
+    <h1>로그인</h1>
+    <input type="text" id="login-username" placeholder="아이디">
+    <input type="password" id="login-password" placeholder="비밀번호">
+    <button onclick="login()">로그인</button>
+    <p id="login-message"></p>
+
+    <script>
+        async function register() {
+            const username = document.getElementById('reg-username').value;
+            const password = document.getElementById('reg-password').value;
+
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password})
+            });
+            const data = await response.json();
+            document.getElementById('reg-message').innerText = data.message;
+        }
+
+        async function login() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password})
+            });
+            const data = await response.json();
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            } else {
+                document.getElementById('login-message').innerText = data.message;
+            }
+        }
+    </script>
+</body>
+</html>
